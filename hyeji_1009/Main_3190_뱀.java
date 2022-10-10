@@ -13,6 +13,7 @@ public class Main_3190_뱀 {
 	static int T = 0; 
 	static List<Dir> list = new ArrayList<Dir>();
 	static int dirH = 0, dirT = 0;
+	static int indexH=0, indexT=0, delay=0;
 	
 	static int[] dx = {0,1,0,-1};
 	static int[] dy = {1,0,-1,0};
@@ -49,12 +50,8 @@ public class Main_3190_뱀 {
 	}
 
 	private static void start() {
-		int index=0;
+		
 		while(true) {
-			Dir d = new Dir();
-			if(index < list.size()) {
-				d = list.get(index);
-			}
 			
 			int nhx = hx + dx[dirH];
 			int nhy = hy + dy[dirH];
@@ -67,55 +64,55 @@ public class Main_3190_뱀 {
 				break;
 			}
 
-			if( map[nhx][nhy] == 1 || map[nhx][nhy] == 3 || map[nhx][nhy] == 4 ) break;
+			if( map[nhx][nhy] == 1 ) break;
 			
 			hx = nhx;
 			hy = nhy;
 			
 			if(map[hx][hy] == 2) {
-				map[hx][hy] = 1;
+				delay++;
 			}else {
-				map[hx][hy] = 1; //머리이동
 				//꼬리이동
 				map[tx][ty] = 0; 
 				tx = ntx;
 				ty = nty;
-			
 			}
+			
+			map[hx][hy] = 1;
+			
 
-			if(T == d.x) {
-				map[hx][hy] = d.c.equals("L") ? 3 : 4;
+			if(indexH < list.size()) {
+				Dir d = list.get(indexH);
 				
-				index++;
+				if(T == d.x) {
+					if(d.c.equals("D")) {
+						dirH++;
+						if(dirH > 3) dirH -= 4;
+					}else if(d.c.equals("L")){
+						dirH--;
+						if(dirH < 0) dirH += 4;
+					}
+					
+					indexH++;
+				}
 			}
-			change();
 			
-			if(map[tx][ty] == 3 || map[tx][ty] == 4 ) {
-				map[tx][ty] = 1;
+			if(indexT < list.size()) {
+				Dir d = list.get(indexT);
+				if(d.x + delay == T) {
+					if(d.c.equals("D")) {
+						dirT++;
+						if(dirT > 3) dirT -= 4;
+					}else if(d.c.equals("L")){
+						dirT--;
+						if(dirT < 0) dirT += 4;
+					}
+					indexT++;
+				}
+
 			}
+			
 		}
-	}
-	
-	private static void change() {
-		
-		if(dirH == 0 && map[hx][hy] == 3) dirH = 3; 
-		else if(dirH == 0 && map[hx][hy] == 4) dirH = 1; 
-		else if(dirH == 1 && map[hx][hy] == 3) dirH = 0; 
-		else if(dirH == 1 && map[hx][hy] == 4) dirH = 2; 
-		else if(dirH == 2 && map[hx][hy] == 3) dirH = 1; 
-		else if(dirH == 2 && map[hx][hy] == 4) dirH = 3; 
-		else if(dirH == 3 && map[hx][hy] == 3) dirH = 2; 
-		else if(dirH == 3 && map[hx][hy] == 4) dirH = 0; 
-		
-		if(dirT == 0 && map[tx][ty] == 3) dirT = 3;
-		else if(dirT == 0 && map[tx][ty] == 4) dirT = 1;
-		else if(dirT == 1 && map[tx][ty] == 3) dirT = 0;
-		else if(dirT == 1 && map[tx][ty] == 4) dirT = 2;
-		else if(dirT == 2 && map[tx][ty] == 3) dirT = 1;
-		else if(dirT == 2 && map[tx][ty] == 4) dirT = 3;
-		else if(dirT == 3 && map[tx][ty] == 3) dirT = 2;
-		else if(dirT == 3 && map[tx][ty] == 4) dirT = 0;
-		
 	}
 
 }
